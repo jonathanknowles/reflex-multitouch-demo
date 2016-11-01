@@ -1,0 +1,72 @@
+<html>
+    <head>
+        <meta name="viewport" content="width=device-width, user-scalable=no">
+        <script type="text/javascript">
+            onTouchStart = function (event) {
+                ts = event.changedTouches;
+                for (i = 0; i < ts.length; i ++) {
+                    console.log (event);
+                    t = ts [i];
+                    e = document.createElement ("div");
+                    e.className = "touch";
+                    e.id = "touch-" + t.identifier;
+                    e.textContent = t.identifier;
+                    document.getElementById ("touch-area").appendChild (e);
+                    console.log (t.identifier + ": start");
+                    console.log (t.identifier + ": (" + t.clientX + ", " + t.clientY + ")");
+                    e.style = "left:" + (t.clientX - 84) + "px; top:" + (t.clientY - 84) + "px";
+                };
+            };
+            onTouchMove = function (event) {
+                ts = event.changedTouches;
+                for (i = 0; i < event.changedTouches.length; i ++) {
+                    t = ts [i];
+                    console.log (t.identifier + ": (" + t.clientX + ", " + t.clientY + ")");
+                    e = document.getElementById ("touch-" + t.identifier);
+                    e.style = "left:" + (t.clientX - 84) + "px; top:" + (t.clientY - 84) + "px";
+                };
+            };
+            onTouchEnd = function (event) {
+                ts = event.changedTouches;
+                for (i = 0; i < event.changedTouches.length; i ++) {
+                    t = ts [i];
+                    console.log (t.identifier + ": (" + t.clientX + ", " + t.clientY + ")");
+                    console.log (t.identifier + ": end");
+                    var e = document.getElementById ("touch-" + t.identifier);
+                    while (e != null) {
+                        document.getElementById ("touch-area").removeChild (e);
+                        var e = document.getElementById ("touch-" + t.identifier);
+                    };
+                };
+            };
+            window.onload = function () {
+                a = document.getElementById ("touch-area");
+                a.addEventListener ("touchstart", onTouchStart, false);
+                a.addEventListener ("touchmove", onTouchMove, false);
+                a.addEventListener ("touchend", onTouchEnd, false);
+            };
+        </script>
+        <style type="text/css">
+            * { padding: 0px
+              ; margin: 0px
+              }
+            body { background-color: black }
+            div#touch-area { width: 412px
+                           ; height: 732px
+                           }
+            div.touch { position: absolute
+                      ; font-size: 32px
+                      ; border-radius: 8px
+                      ; width: 64px
+                      ; height: 64px
+                      ; color: #ffffff
+                      ; background-color: #222222
+                      ; text-align: center
+                      ; vertical-align: middle
+                      ; line-height: 64px }
+        </style>
+    </head>
+    <body>
+        <div id="touch-area" />
+    </body>
+</html>
