@@ -3,77 +3,91 @@
         <meta name="viewport" content="width=device-width, user-scalable=no">
         <script type="text/javascript">
 
-            createIndicator = function (id) {
+            function createIndicator (id) {
                 e = document.createElement ("div");
                 e.className = "touch";
                 e.id = "touch-" + id;
                 document.getElementById ("touch-area").appendChild (e);
-            };
+            }
 
-            moveIndicator = function (id, x, y) {
+            function moveIndicator (id, x, y) {
                 e = document.getElementById ("touch-" + id);
                 if (e != null) {
-                    e.style = "left:" + (x - 48) + "px; top:" + (y - 48) + "px";
-                };
-            };
+                    e.style.transform =
+                        "translate3d(" + (x - 48) + "px, " + (y - 48) + "px, 0px)";
+                }
+            }
 
-            removeIndicator = function (id) {
-                var e = document.getElementById ("touch-" + id);
-                while (e != null) {
+            function removeIndicator (id) {
+                e = document.getElementById ("touch-" + id);
+                if (e != null) {
                     document.getElementById ("touch-area").removeChild (e);
-                    e = document.getElementById ("touch-" + id);
-                };
-            };
+                }
+            }
 
-            onTouchStart = function (event) {
+            function onTouchStart (event) {
                 ts = event.changedTouches;
                 for (i = 0; i < ts.length; i ++) {
                     t = ts [i];
-                    createIndicator (t.identifier)
+                    createIndicator (t.identifier);
                     moveIndicator (t.identifier, t.clientX, t.clientY);
-                };
-            };
+                }
+            }
 
-            onTouchMove = function (event) {
+            function onTouchMove (event) {
                 ts = event.changedTouches;
                 for (i = 0; i < event.changedTouches.length; i ++) {
                     t = ts [i];
                     moveIndicator (t.identifier, t.clientX, t.clientY);
-                };
-            };
+                }
+            }
 
-            onTouchEnd = function (event) {
+            function onTouchEnd (event) {
                 ts = event.changedTouches;
                 for (i = 0; i < event.changedTouches.length; i ++) {
                     t = ts [i];
                     removeIndicator (t.identifier);
-                };
-            };
+                }
+            }
+
+            function onTouchCancel (event) {
+                onTouchEnd (event);
+            }
 
             window.onload = function () {
                 a = document.getElementById ("touch-area");
-                a.addEventListener ("touchstart", onTouchStart, false);
-                a.addEventListener ("touchmove", onTouchMove, false);
-                a.addEventListener ("touchend", onTouchEnd, false);
-            };
+                a.addEventListener ("touchstart" , onTouchStart , {passive: true});
+                a.addEventListener ("touchmove"  , onTouchMove  , {passive: true});
+                a.addEventListener ("touchend"   , onTouchEnd   , {passive: true});
+                a.addEventListener ("touchcancel", onTouchCancel, {passive: true});
+            }
 
         </script>
         <style type="text/css">
-            * { padding: 0px
-              ; margin: 0px
-              }
-            body { background-color: black }
-            div#touch-area { width: 412px
-                           ; height: 732px
-                           }
-            div.touch { position: absolute
-                      ; width: 88px
-                      ; height: 88px
-                      ; border-width: 4px
-                      ; border-style: solid
-                      ; border-color: #ffffff
-                      ; background-color: #888888
-                      ; vertical-align: middle }
+            * {
+                padding: 0px;
+                margin: 0px;
+            }
+            body {
+                background-color: black;
+            }
+            html, body, div#touch-area {
+                width: 411px;
+                height: 731px;
+                transform: translate3d(0px,0px,0px);
+                overflow-x: hidden;
+                overflow-y: hidden;
+            }
+            div.touch {
+                position: absolute;
+                width: 88px;
+                height: 88px;
+                border-width: 4px;
+                border-radius: 50%;
+                border-style: solid;
+                border-color: #ffffff;
+                background-color: #888888;
+            }
         </style>
     </head>
     <body>
