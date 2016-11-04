@@ -3,25 +3,29 @@
         <meta name="viewport" content="width=device-width, user-scalable=no">
         <script type="text/javascript">
 
+            currentIndicators = [];
+
+            touchArea = null;
+
             function createIndicator (id) {
                 e = document.createElement ("div");
                 e.className = "touch";
-                e.id = "touch-" + id;
-                document.getElementById ("touch-area").appendChild (e);
+                touchArea.appendChild (e);
+                currentIndicators [id] = e;
             }
 
             function moveIndicator (id, x, y) {
-                e = document.getElementById ("touch-" + id);
+                e = currentIndicators [id];
                 if (e != null) {
-                    e.style.transform =
+                    e.style.webkitTransform =
                         "translate3d(" + (x - 48) + "px, " + (y - 48) + "px, 0px)";
                 }
             }
 
             function removeIndicator (id) {
-                e = document.getElementById ("touch-" + id);
+                e = currentIndicators [id];
                 if (e != null) {
-                    document.getElementById ("touch-area").removeChild (e);
+                    touchArea.removeChild (e);
                 }
             }
 
@@ -36,7 +40,7 @@
 
             function onTouchMove (event) {
                 ts = event.changedTouches;
-                for (i = 0; i < event.changedTouches.length; i ++) {
+                for (i = 0; i < ts.length; i ++) {
                     t = ts [i];
                     moveIndicator (t.identifier, t.clientX, t.clientY);
                 }
@@ -44,7 +48,7 @@
 
             function onTouchEnd (event) {
                 ts = event.changedTouches;
-                for (i = 0; i < event.changedTouches.length; i ++) {
+                for (i = 0; i < ts.length; i ++) {
                     t = ts [i];
                     removeIndicator (t.identifier);
                 }
@@ -55,11 +59,11 @@
             }
 
             window.onload = function () {
-                a = document.getElementById ("touch-area");
-                a.addEventListener ("touchstart" , onTouchStart , {passive: true});
-                a.addEventListener ("touchmove"  , onTouchMove  , {passive: true});
-                a.addEventListener ("touchend"   , onTouchEnd   , {passive: true});
-                a.addEventListener ("touchcancel", onTouchCancel, {passive: true});
+                touchArea = document.getElementById ("touch-area");
+                touchArea.addEventListener ("touchstart" , onTouchStart , {passive: true});
+                touchArea.addEventListener ("touchmove"  , onTouchMove  , {passive: true});
+                touchArea.addEventListener ("touchend"   , onTouchEnd   , {passive: true});
+                touchArea.addEventListener ("touchcancel", onTouchCancel, {passive: true});
             }
 
         </script>
@@ -75,11 +79,15 @@
                 width: 411px;
                 height: 731px;
                 transform: translate3d(0px,0px,0px);
+                -webkit-backface-visibility: hidden;
+                -webkit-perspective: 1000;
                 overflow-x: hidden;
                 overflow-y: hidden;
             }
             div.touch {
                 position: absolute;
+                -webkit-backface-visibility: hidden;
+                -webkit-perspective: 1000;
                 width: 88px;
                 height: 88px;
                 border-width: 4px;
